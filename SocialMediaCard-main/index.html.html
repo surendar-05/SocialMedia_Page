@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media NFC Card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preload" href="https://example.com/QIyy5Y9e_400x400.jpg" as="image">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" as="style">
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-color: #ffffff;
+            --accent-color: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.2);
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .background {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 0% 0%, rgba(255, 0, 85, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 100% 0%, rgba(0, 255, 136, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 85, 255, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(255, 136, 0, 0.8) 0%, transparent 50%);
+            filter: blur(100px);
+            opacity: 0.5;
+            animation: backgroundMove 20s ease infinite alternate;
+        }
+
+        @keyframes backgroundMove {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .content-wrapper {
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .profile-container {
+            background: var(--accent-color);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 
+                0 25px 45px var(--shadow-color),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            border: 1px solid var(--border-color);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg) translateX(-100%);
+            animation: reflectionMove 8s ease-in-out infinite;
+        }
+
+        @keyframes reflectionMove {
+            0%, 100% { transform: rotate(45deg) translateX(-100%); }
+            50% { transform: rotate(45deg) translateX(100%); }
+        }
+
+        .profile-image-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0055, #00ff88, #0055ff);
+            padding: 4px;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid rgba(0, 0, 0, 0.8);
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+            background: linear-gradient(45deg, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 25px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            background: var(--accent-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px) scale(1.02);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px var(--shadow-color);
+        }
+
+        .social-link i {
+            font-size: 1.5em;
+        }
+
+        .animated-background {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .animated-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.2);
+            will-change: transform, opacity;
+            animation: iconFloat 15s cubic-bezier(0.25, 0.1, 0.25, 1) infinite;
+        }
+
+        @keyframes iconFloat {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-height: 800px) {
+            body {
+                align-items: flex-start;
+            }
+
+            .content-wrapper {
+                margin: 20px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background" aria-hidden="true"></div>
+    <div class="animated-background" id="animatedBackground" aria-hidden="true"></div>
+
+    <div class="content-wrapper">
+        <main class="profile-container">
+            <div class="profile-image-wrapper">
+                <div class="profile-image">
+                    <img src="QIyy5Y9e_400x400.jpg" alt="Profile Picture" width="180" height="180">
+                </div>
+            </div>
+            <h1>Gokil P</h1>
+            <nav class="social-links">
+                <a href="https://x.com/Gokilp_25" class="social-link">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://www.instagram.com/gokilp25/" class="social-link">
+                    <i class="fab fa-instagram" aria-hidden="true"></i>
+                    <span>Instagram</span>
+                <a href="https://www.linkedin.com/in/gokilp/" class="social-link">
+                    <i class="fab fa-linkedin" aria-hidden="true"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/Gokilp" class="social-link">
+                    <i class="fab fa-github" aria-hidden="true"></i>
+                    <span>GitHub</span>
+                </a>
+                <a href="mailto:gokilp25@gmail.com" class="social-link">
+                    <i class="far fa-envelope" aria-hidden="true"></i>
+                    <span>Gmail</span>
+                </a>
+            </nav>
+        </main>
+    </div>
+
+    <script>
+        const animatedBackground = document.getElementById('animatedBackground');
+        const icons = ['twitter', 'instagram', 'linkedin', 'github', 'envelope'];
+        const iconColors = ['#1DA1F2', '#E1306C', '#0077B5', '#333', '#D44638'];
+        const maxIcons = 30;
+        let activeIcons = 0;
+
+        function createIcon() {
+            if (activeIcons >= maxIcons) return;
+
+            const icon = document.createElement('i');
+            const randomIconIndex = Math.floor(Math.random() * icons.length);
+            const randomIcon = icons[randomIconIndex];
+            const randomColor = iconColors[randomIconIndex];
+            
+            icon.className = `fa${randomIcon === 'envelope' ? 'r' : 'b'} fa-${randomIcon} animated-icon`;
+            icon.style.cssText = `
+                left: ${Math.random() * 100}%;
+                color: ${randomColor};
+                opacity: 0;
+                animation-duration: ${10 + Math.random() * 10}s;
+                animation-delay: ${Math.random() * 5}s;
+            `;
+
+            animatedBackground.appendChild(icon);
+            activeIcons++;
+
+            icon.addEventListener('animationend', () => {
+                icon.remove();
+                activeIcons--;
+                createIcon();
+            });
+        }
+
+        // Create initial set of icons
+        for (let i = 0; i < maxIcons; i++) {
+            createIcon();
+        }
+
+        // Optimize performance by using IntersectionObserver
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                entry.target.style.willChange = entry.isIntersecting ? 'transform, opacity' : 'auto';
+            });
+        }, { threshold: 0.1 });
+
+        // Observe icons
+        function observeIcons() {
+            document.querySelectorAll('.animated-icon').forEach(icon => observer.observe(icon));
+        }
+
+        // Initial observation
+        observeIcons();
+
+        // Re-observe icons periodically
+        setInterval(observeIcons, 5000);
+    </script>
+</body>
+</html>
